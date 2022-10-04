@@ -2,7 +2,7 @@ https://www.youtube.com/watch?v=1QPJd2Fl6i4
 
 
 ### Downloading the Data from MAST
-[Download](mast.stsci.edu)
+[Download](https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html)
 
 1. Advanced Search
 2. Search for data
