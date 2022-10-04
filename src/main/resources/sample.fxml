@@ -5,15 +5,15 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.cjcrafter.webb.ui.Main">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.cjcrafter.webb.ui.Controller">
    <children>
       <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Image 1">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane fx:id="combineImages" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label layoutY="44.0" prefHeight="17.0" prefWidth="600.0" text="Title" />
+                        <Label layoutY="1.0" prefHeight="3.0" prefWidth="600.0" text="Combine Images" />
                      </children></AnchorPane>
             </content>
           </Tab>
