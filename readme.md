@@ -38,8 +38,8 @@ scripts that we can look at then.... javascript
 
 You can take a script from these active forums and change some values to your liking (will take some trial and error)
 1. Apply script and fix star cores for each image (apply to all the filters)
-   1b. Can also bring fits files straight into Pixinsight
-   1c. You can also keep processing the image in Pixinsight instead of moving it to photoshop
+1b. Can also bring fits files straight into Pixinsight
+1c. You can also keep processing the image in Pixinsight instead of moving it to photoshop
 
 ### Photoshop/Gimp
 #### Take filters and apply color to them
