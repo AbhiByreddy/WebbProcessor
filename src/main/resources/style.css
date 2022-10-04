@@ -1,0 +1,59 @@
+.root {
+    -fx-background-color: #2B2B2B;
+}
+
+.label {
+    -fx-font-size: 24;
+    -fx-font-family: "Lucida Console";
+    -fx-text-fill: #AFB1B3;
+    -fx-alignment: center;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+.tab-pane {
+    -fx-tab-min-width: 90px;
+}
+
+.tab {
+    -fx-background-insets: 0 0 0 0, 0, 0;
+    -fx-background-radius: 0;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #3C3F41;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #4E5254;
+}
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-font-family: "Lucida Console";
+    -fx-text-fill: #BBBBBB;
+    -fx-font-size: 12px;
+}
+
+.tab-pane:top *.tab-header-area {
+    -fx-background-color: #2B2B2B;
+    -fx-font-family: "Lucida Console";
+    -fx-text-fill: #AFB1B3;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0 0 0 0;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0px;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: #4A88C7;
+    -fx-border-width: 0 0 5px 0;
+    -fx-border-radius: 0;
+
+}
+
+#titleLabel {
+    -fx-font-size: 48;
+}
