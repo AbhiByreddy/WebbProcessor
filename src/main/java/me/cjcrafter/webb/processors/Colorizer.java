@@ -20,10 +20,12 @@ public class Colorizer implements ImageProcessor {
         short[] from = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
         int[] to = ((DataBufferInt) temp.getRaster().getDataBuffer()).getData();
 
-        for (int i = 0; i < to.length; i++) {
-            int sample = from[i];
-            float percentage = sample / 255f;
-            to[i] = (int) (percentage * rgb);
+        try {
+            for (int i = 0; i < to.length; i++) {
+                to[i] = (int) ((from[i] / 255f) * rgb);
+            }
+        } catch (Throwable ex) {
+            ex.printStackTrace();
         }
 
         return temp;

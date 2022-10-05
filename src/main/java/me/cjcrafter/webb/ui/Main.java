@@ -75,13 +75,19 @@ public class Main extends Application {
                     }
                 }).toList();
 
+                images = new ArrayList<>(images);
+
                 Color[] colors = new Color[] { Color.red, Color.green, Color.blue };
 
                 // Scale the images
+                System.out.println("Fixing star cores");
                 images.forEach(img -> new StarCoreFixer().process(img));
+                System.out.println("Applying Color");
                 for (int i = 0; i < images.size(); i++) {
+                    System.out.println("Coloring image " + i);
                     images.set(i, new Colorizer(colors[i]).process(images.get(i)));
                 }
+                System.out.println("Scaling images");
                 images = new ImageScaler(ImageScaler.Algorithm.SMOOTH).addImages(images).getScaled();
 
                 BufferedImage image = new AdditiveCombiner().combine(images.toArray(new BufferedImage[0]));
@@ -90,6 +96,7 @@ public class Main extends Application {
                     file.mkdirs();
                     int length = file.listFiles() == null ? 0 : file.listFiles().length;
                     ImageIO.write(image, "png", new File(file ,"Image" + length + 1 + ".png"));
+                    System.out.println("DONE!");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
