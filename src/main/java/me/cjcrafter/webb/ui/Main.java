@@ -10,6 +10,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import me.cjcrafter.webb.ImageWrapper;
 import me.cjcrafter.webb.img.AdditiveCombiner;
 import me.cjcrafter.webb.img.ImageScaler;
 import me.cjcrafter.webb.processors.Colorizer;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -63,50 +65,57 @@ public class Main extends Application {
         });
 
         controller.combineImages.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.hasFiles()) {
-                List<BufferedImage> images = db.getFiles().stream().map(file -> {
-                    try {
-                        return ImageIO.read(file);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        return null;
-                    }
-                }).toList();
+            try {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasFiles()) {
+                    List<ImageWrapper> images = db.getFiles().stream().map(file -> {
+                        try {
+                            return ImageIO.read(file);
+                        } catch (IOException ex) {
+                            throw new InternalError(ex);
+                        }
+                    }).map(ImageWrapper::new).toList();
 
-                images = new ArrayList<>(images);
-
-                Color[] colors = new Color[] { Color.red, Color.green, Color.blue };
-
-                // Scale the images
-                System.out.println("Fixing star cores");
-                images.forEach(img -> new StarCoreFixer().process(img));
-                System.out.println("Applying Color");
-                for (int i = 0; i < images.size(); i++) {
-                    System.out.println("Coloring image " + i);
-                    images.set(i, new Colorizer(colors[i]).process(images.get(i)));
-                }
-                System.out.println("Scaling images");
-                images = new ImageScaler(ImageScaler.Algorithm.SMOOTH).addImages(images).getScaled();
-
-                BufferedImage image = new AdditiveCombiner().combine(images.toArray(new BufferedImage[0]));
-                try {
+                    images = new ArrayList<>(images);
                     File file = new File("ScaledImages");
                     file.mkdirs();
-                    int length = file.listFiles() == null ? 0 : file.listFiles().length;
-                    ImageIO.write(image, "png", new File(file ,"Image" + length + 1 + ".png"));
-                    System.out.println("DONE!");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    int fileNumber = file.listFiles() == null ? 0 : file.listFiles().length;
+
+                    Color[] colors = new Color[]{Color.red, Color.green, Color.blue};
+
+                    // Scale the images
+                    System.out.println("Fixing star cores");
+                    images.forEach(img -> new StarCoreFixer().process(img));
+                    System.out.println("Applying Color");
+                    for (int i = 0; i < images.size(); i++) {
+                        System.out.println("Coloring image " + i);
+                        images.set(i, new Colorizer(colors[i]).process(images.get(i)));
+
+                        File output = new File(file, "Image" + fileNumber + "_" + colors[i] + ".png");
+                        ImageIO.write(images.get(i), "png", output);
+                    }
+                    System.out.println("Scaling images");
+                    images = new ImageScaler(ImageScaler.Algorithm.SMOOTH).addImages(images).getScaled();
+
+                    BufferedImage image = new AdditiveCombiner().combine(images);
+                    try {
+                        File output = new File(file, "Image" + fileNumber + ".png");
+                        ImageIO.write(image, "png", output);
+                        System.out.println("DONE! Wrote to " + output);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    //combineImages.setText(db.getFiles().toString());
+                    success = true;
                 }
 
-                //combineImages.setText(db.getFiles().toString());
-                success = true;
+                event.setDropCompleted(success);
+                event.consume();
+            } catch (Throwable ex) {
+                ex.printStackTrace();
             }
-
-            event.setDropCompleted(success);
-            event.consume();
         });
     }
 

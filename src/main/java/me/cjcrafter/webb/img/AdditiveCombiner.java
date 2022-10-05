@@ -1,7 +1,7 @@
 package me.cjcrafter.webb.img;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
+import me.cjcrafter.webb.ColorHolder;
+import me.cjcrafter.webb.ImageWrapper;
 
 /**
  * Combines image by simply adding the colors together. If the color
@@ -10,7 +10,7 @@ import java.awt.image.DataBufferInt;
 public class AdditiveCombiner implements ImageCombiner {
 
     @Override
-    public BufferedImage combine(BufferedImage... images) {
+    public ImageWrapper combine(ImageWrapper... images) {
         int width = images[0].getWidth();
         int height = images[0].getHeight();
         int pixels = width * height;
@@ -20,11 +20,10 @@ public class AdditiveCombiner implements ImageCombiner {
         float[] blues = new float[pixels];
 
         // Loop through the given images and add up their RGB values
-        for (BufferedImage image : images) {
+        for (ImageWrapper image : images) {
 
             // Cache the pixels array for performance
             System.out.println("Getting data for image");
-            int[] data = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
             // Check to make sure image sizes match up
             if (image.getWidth() != width || image.getHeight() != height)
@@ -32,22 +31,21 @@ public class AdditiveCombiner implements ImageCombiner {
 
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    float[] converted = ImageUtil.fromInt(data[y * width + x]);
+                    ColorHolder sample = image.getColor(x, y);
                     int index = y * width + x;
 
                     // Additively combine pixels
-                    reds[index] += converted[0];
-                    greens[index] += converted[1];
-                    blues[index] += converted[2];
+                    reds[index] += sample.r;
+                    greens[index] += sample.g;
+                    blues[index] += sample.b;
                 }
             }
         }
 
         // Construct the new image
-        BufferedImage temp = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        int[] raw = ((DataBufferInt)temp.getRaster().getDataBuffer()).getData();
-        for (int i = 0; i < raw.length; i++) {
-            raw[i] = ImageUtil.toInt(ImageUtil.clamp01(reds[i]), ImageUtil.clamp01(greens[i]), ImageUtil.clamp01(blues[i]));
+        ImageWrapper temp = new ImageWrapper(width, height);
+        for (int i = 0; i < pixels; i++) {
+            temp.setColor(pixels / width, pixels % width, new ColorHolder(reds[i], greens[i], blues[i]));
         }
 
         return temp;

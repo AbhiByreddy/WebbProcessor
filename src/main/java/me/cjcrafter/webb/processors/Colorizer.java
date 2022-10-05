@@ -1,5 +1,7 @@
 package me.cjcrafter.webb.processors;
 
+import me.cjcrafter.webb.img.ImageUtil;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -10,7 +12,7 @@ public class Colorizer implements ImageProcessor {
     private final int rgb;
 
     public Colorizer(Color color) {
-        this.rgb = color.getRGB();
+        this.rgb = (color.getRed() << 16) | (color.getGreen() << 8) | color.getBlue();
     }
 
     @Override
@@ -22,7 +24,9 @@ public class Colorizer implements ImageProcessor {
 
         try {
             for (int i = 0; i < to.length; i++) {
-                to[i] = (int) ((from[i] / 255f) * rgb);
+                float sample = (((int) from[i]) & 0xff) / 255f;
+                int color = ImageUtil.lerp(0, rgb, sample);
+                to[i] = color;
             }
         } catch (Throwable ex) {
             ex.printStackTrace();

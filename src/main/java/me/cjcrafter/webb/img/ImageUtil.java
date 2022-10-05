@@ -1,5 +1,7 @@
 package me.cjcrafter.webb.img;
 
+import java.awt.*;
+
 /**
  * Utility class containing static methods for images.
  */
@@ -63,5 +65,25 @@ public final class ImageUtil {
         int tempG = clamp((int) (g * 255f), 0, 255);
         int tempB = clamp((int) (b * 255f), 0, 255);
         return (tempR << 16) | (tempG << 8) | tempB;
+    }
+
+    public static Color lerp(Color a, Color b, float t) {
+        t = clamp01(t);
+        float dt = 1 - t;
+
+        float red = a.getRed() * dt + b.getRed() * t;
+        float green = a.getGreen() * dt + b.getGreen() * t;
+        float blue = a.getBlue() * dt + b.getBlue() * t;
+        return new Color(red, green, blue);
+    }
+
+    public static int lerp(int a, int b, float t) {
+        t = clamp01(t);
+        float dt = 1 - t;
+
+        int red = (int) ((a >> 16 & 0xff) * dt + (b >> 16 & 0xff) * t);
+        int green = (int) ((a >> 8 & 0xff) * dt + (b >> 8 & 0xff) * t);
+        int blue = (int) ((a & 0xff) * dt + (b & 0xff) * t);
+        return red << 16 | green << 8 | blue;
     }
 }
