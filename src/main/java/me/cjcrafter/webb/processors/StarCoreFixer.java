@@ -27,7 +27,7 @@ public class StarCoreFixer implements ImageProcessor {
     }
 
     @Override
-    public void process(BufferedImage image) {
+    public BufferedImage process(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -61,5 +61,7 @@ public class StarCoreFixer implements ImageProcessor {
                 }
             }
         }
+
+        return image;
     }
 }
