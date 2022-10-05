@@ -20,7 +20,7 @@ dependencies {
 
 javafx {
     version = "19"
-    modules("javafx.controls", "javafx.fxml")
+    modules("javafx.controls", "javafx.fxml", "javafx.base")
 }
 
 application {
