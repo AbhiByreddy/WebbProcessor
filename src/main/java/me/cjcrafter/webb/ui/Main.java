@@ -18,12 +18,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 // https://www.youtube.com/watch?v=9XJicRt_FaI
 public class Main extends Application {
-
+    //Method to check if the file exists and is not a directory
+    public static boolean isFileExists(File file) {
+        return file.exists() && !file.isDirectory();
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -72,7 +76,10 @@ public class Main extends Application {
 
                 BufferedImage image = new AdditiveCombiner().combine(images.toArray(new BufferedImage[0]));
                 try {
-                    ImageIO.write(image, "jpg", new File(UUID.randomUUID() + ".jpg"));
+                    File file = new File("ScaledImages");
+                    file.mkdirs();
+                    int length = file.listFiles() == null ? 0 : file.listFiles().length;
+                    ImageIO.write(image, "png", new File(file ,"Image" + length + 1 + ".png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
