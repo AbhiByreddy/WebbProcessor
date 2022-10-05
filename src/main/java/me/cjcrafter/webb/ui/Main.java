@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import me.cjcrafter.webb.img.AdditiveCombiner;
 import me.cjcrafter.webb.img.ImageScaler;
+import me.cjcrafter.webb.processors.StarCoreFixer;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -72,6 +73,7 @@ public class Main extends Application {
                 }).toList();
 
                 // Scale the images
+                images.forEach(img -> new StarCoreFixer().process(img));
                 images = new ImageScaler(ImageScaler.Algorithm.SMOOTH).addImages(images).getScaled();
 
                 BufferedImage image = new AdditiveCombiner().combine(images.toArray(new BufferedImage[0]));
