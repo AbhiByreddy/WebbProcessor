@@ -22,13 +22,17 @@ public class AdditiveCombiner implements ImageCombiner {
         // Loop through the given images and add up their RGB values
         for (BufferedImage image : images) {
 
+            // Cache the pixels array for performance
+            System.out.println("Getting data for image");
+            int[] data = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+
             // Check to make sure image sizes match up
             if (image.getWidth() != width || image.getHeight() != height)
                 throw new IllegalArgumentException("Images need to be the same size");
 
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    float[] converted = ImageUtil.fromInt(image.getRGB(x, y));
+                    float[] converted = ImageUtil.fromInt(data[y * width + x]);
                     int index = y * width + x;
 
                     // Additively combine pixels

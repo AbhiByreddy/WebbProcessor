@@ -26,3 +26,5 @@ javafx {
 application {
     mainClass.set("me.cjcrafter.webb.ui.Main")
 }
+
+//tasks.run.get().workingDir = File("/run")

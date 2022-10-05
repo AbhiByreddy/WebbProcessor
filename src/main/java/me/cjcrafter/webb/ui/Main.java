@@ -11,6 +11,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import me.cjcrafter.webb.img.AdditiveCombiner;
+import me.cjcrafter.webb.img.ImageScaler;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.UUID;
 
 // https://www.youtube.com/watch?v=9XJicRt_FaI
 public class Main extends Application {
@@ -65,9 +67,12 @@ public class Main extends Application {
                     }
                 }).toList();
 
+                // Scale the images
+                images = new ImageScaler(ImageScaler.Algorithm.SMOOTH).addImages(images).getScaled();
+
                 BufferedImage image = new AdditiveCombiner().combine(images.toArray(new BufferedImage[0]));
                 try {
-                    ImageIO.write(image, "jpg", new File("add.jpg"));
+                    ImageIO.write(image, "jpg", new File(UUID.randomUUID() + ".jpg"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
