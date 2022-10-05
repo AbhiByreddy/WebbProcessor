@@ -12,9 +12,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import me.cjcrafter.webb.img.AdditiveCombiner;
 import me.cjcrafter.webb.img.ImageScaler;
+import me.cjcrafter.webb.processors.Colorizer;
 import me.cjcrafter.webb.processors.StarCoreFixer;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 // https://www.youtube.com/watch?v=9XJicRt_FaI
 public class Main extends Application {
@@ -72,8 +75,13 @@ public class Main extends Application {
                     }
                 }).toList();
 
+                Color[] colors = new Color[] { Color.red, Color.green, Color.blue };
+
                 // Scale the images
                 images.forEach(img -> new StarCoreFixer().process(img));
+                for (int i = 0; i < images.size(); i++) {
+                    images.set(i, new Colorizer(colors[i]).process(images.get(i)));
+                }
                 images = new ImageScaler(ImageScaler.Algorithm.SMOOTH).addImages(images).getScaled();
 
                 BufferedImage image = new AdditiveCombiner().combine(images.toArray(new BufferedImage[0]));
