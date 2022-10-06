@@ -3,7 +3,6 @@ package me.cjcrafter.webb;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.awt.image.DataBufferUShort;
 
 public class ImageWrapper {
 
@@ -25,26 +24,6 @@ public class ImageWrapper {
         for (int i = 0; i < pixels.length; i++) {
             this.pixels[i] = image.getRGB(i % width, i / width);
         }
-        /*
-        switch (image.getType()) {
-            case BufferedImage.TYPE_INT_ARGB, BufferedImage.TYPE_INT_RGB -> {
-                int[] data = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
-                for (int i = 0; i < data.length; i++) {
-                    pixels[i] = data[i] & 0xffffff;
-                    if (pixels[i] < 0)
-                        System.out.println("Negative pixel: " + pixels[i]);
-                }
-            }
-            case BufferedImage.TYPE_USHORT_GRAY, BufferedImage.TYPE_USHORT_555_RGB, BufferedImage.TYPE_USHORT_565_RGB -> {
-                short[] data = ((DataBufferUShort) image.getRaster().getDataBuffer()).getData();
-                for (int i = 0; i < data.length; i++) {
-                    pixels[i] = Short.toUnsignedInt(data[i]);
-                    if (pixels[i] < 0)
-                        System.out.println("Negative pixel: " + pixels[i]);
-                }
-            }
-        }
-         */
     }
 
     public int getWidth() {
@@ -56,11 +35,23 @@ public class ImageWrapper {
     }
 
     public ColorWrapper getColor(int x, int y) {
-        return new ColorWrapper(pixels[y * width + x]);
+        return getColor(y * width + x);
+    }
+
+    public ColorWrapper getColor(int i) {
+        if (i < 0 || i >= pixels.length)
+            throw new IndexOutOfBoundsException("For index " + i + " and length " + pixels.length + " (" + width + "x" + height + ")");
+        return new ColorWrapper(pixels[i]);
     }
 
     public void setColor(int x, int y, ColorWrapper color) {
-        pixels[y * width + x] = color.getRGB();
+        setColor(y * width + x, color);
+    }
+
+    public void setColor(int i, ColorWrapper color) {
+        if (i < 0 || i >= pixels.length)
+            throw new IndexOutOfBoundsException("For index " + i + " and length " + pixels.length + " (" + width + "x" + height + ")");
+        pixels[i] = color.getRGB();
     }
 
     public void tint(ColorWrapper tint) {

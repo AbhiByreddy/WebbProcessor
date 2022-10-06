@@ -23,11 +23,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 // https://www.youtube.com/watch?v=9XJicRt_FaI
 public class Main extends Application {
@@ -70,8 +71,10 @@ public class Main extends Application {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if (db.hasFiles()) {
+                    List<String> names = new ArrayList<>();
                     List<ImageWrapper> images = db.getFiles().stream().map(file -> {
                         try {
+                            names.add(file.getName());
                             return ImageIO.read(file);
                         } catch (IOException ex) {
                             throw new InternalError(ex);
@@ -88,11 +91,29 @@ public class Main extends Application {
                         ImageIO.write(images.get(i).generateImage(), "png", output);
                     }
 
-                    ColorWrapper[] colors = new ColorWrapper[] {
-                        new ColorWrapper(Color.RED),
-                        new ColorWrapper(Color.GREEN),
-                        new ColorWrapper(Color.BLUE)
-                    };
+                    // NIRCAM can see from 0.6 micrometers to 4.8 micrometers.
+                    // The names of the images come with this information, we
+                    // just need to convert it to nanometers
+                    // https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters
+                    int[] wavelengths = names.stream()
+                            .peek(System.out::println)
+                            .map(str -> Pattern.compile("f\\d\\d\\d([nmw])_").matcher(str))
+                            .peek(matcher -> System.out.println("Match: " + matcher.find()))
+                            .map(Matcher::group)
+                            .map(str -> str.substring(1, str.length() - 2))
+                            .mapToInt(str -> 10 * Integer.parseInt(str))
+                            .toArray();
+
+                    float min = Arrays.stream(wavelengths).min().orElseThrow();
+                    float max = Arrays.stream(wavelengths).max().orElseThrow();
+
+                    List<ColorWrapper> colors = Arrays.stream(wavelengths).mapToObj(i -> {
+                        float percentage = (i - min) / (max - min);
+                        float adjusted = 450 + percentage * (650 - 450);
+                        ColorWrapper wrapper = ColorWrapper.fromWavelength(percentage);
+                        System.out.println("Got " + percentage + " (" + (int) adjusted+ ") from ilerp(" + i + ", " + min + ", " + max + "). This is " + wrapper);
+                        return wrapper;
+                    }).toList();
 
                     // Scale the images
                     System.out.println("Fixing star cores");
@@ -101,7 +122,7 @@ public class Main extends Application {
                     System.out.println("Applying Color");
                     for (int i = 0; i < images.size(); i++) {
                         System.out.println("Coloring image " + i);
-                        images.set(i, new Colorizer(colors[i]).process(images.get(i)));
+                        images.set(i, new Colorizer(colors.get(i)).process(images.get(i)));
 
                         File output = new File(file, "Image" + fileNumber + "_" + new String[]{ "red", "green", "blue"}[i] + ".png");
                         ImageIO.write(images.get(i).generateImage(), "png", output);

@@ -45,9 +45,8 @@ public class AdditiveCombiner implements ImageCombiner {
         // Construct the new image
         ImageWrapper temp = new ImageWrapper(width, height);
         for (int i = 0; i < pixels; i++) {
-            temp.setColor(pixels / width, pixels % width, new ColorWrapper(reds[i], greens[i], blues[i]));
+            temp.setColor(i, new ColorWrapper(reds[i], greens[i], blues[i]));
         }
-
         return temp;
     }
 }
