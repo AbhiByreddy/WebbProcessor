@@ -10,6 +10,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import me.cjcrafter.webb.ColorWrapper;
 import me.cjcrafter.webb.ImageWrapper;
 import me.cjcrafter.webb.img.AdditiveCombiner;
 import me.cjcrafter.webb.img.ImageScaler;
@@ -77,37 +78,46 @@ public class Main extends Application {
                         }
                     }).map(ImageWrapper::new).toList();
 
-                    images = new ArrayList<>(images);
                     File file = new File("ScaledImages");
                     file.mkdirs();
                     int fileNumber = file.listFiles() == null ? 0 : file.listFiles().length;
 
-                    Color[] colors = new Color[]{Color.red, Color.green, Color.blue};
+                    images = new ArrayList<>(images);
+                    for (int i = 0; i < images.size(); i++) {
+                        File output = new File(file, "Image" + fileNumber + "_" + new String[]{ "red", "green", "blue"}[i] + "_base.png");
+                        ImageIO.write(images.get(i).generateImage(), "png", output);
+                    }
+
+                    ColorWrapper[] colors = new ColorWrapper[] {
+                        new ColorWrapper(Color.RED),
+                        new ColorWrapper(Color.GREEN),
+                        new ColorWrapper(Color.BLUE)
+                    };
 
                     // Scale the images
                     System.out.println("Fixing star cores");
                     images.forEach(img -> new StarCoreFixer().process(img));
+
                     System.out.println("Applying Color");
                     for (int i = 0; i < images.size(); i++) {
                         System.out.println("Coloring image " + i);
                         images.set(i, new Colorizer(colors[i]).process(images.get(i)));
 
-                        File output = new File(file, "Image" + fileNumber + "_" + colors[i] + ".png");
-                        ImageIO.write(images.get(i), "png", output);
+                        File output = new File(file, "Image" + fileNumber + "_" + new String[]{ "red", "green", "blue"}[i] + ".png");
+                        ImageIO.write(images.get(i).generateImage(), "png", output);
                     }
                     System.out.println("Scaling images");
-                    images = new ImageScaler(ImageScaler.Algorithm.SMOOTH).addImages(images).getScaled();
+                    images = new ImageScaler().addImages(images).getScaled();
 
-                    BufferedImage image = new AdditiveCombiner().combine(images);
+                    ImageWrapper image = new AdditiveCombiner().combine(images);
                     try {
                         File output = new File(file, "Image" + fileNumber + ".png");
-                        ImageIO.write(image, "png", output);
+                        ImageIO.write(image.generateImage(), "png", output);
                         System.out.println("DONE! Wrote to " + output);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
-                    //combineImages.setText(db.getFiles().toString());
                     success = true;
                 }
 

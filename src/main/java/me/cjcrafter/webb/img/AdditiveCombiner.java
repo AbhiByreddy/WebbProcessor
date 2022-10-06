@@ -1,6 +1,6 @@
 package me.cjcrafter.webb.img;
 
-import me.cjcrafter.webb.ColorHolder;
+import me.cjcrafter.webb.ColorWrapper;
 import me.cjcrafter.webb.ImageWrapper;
 
 /**
@@ -31,7 +31,7 @@ public class AdditiveCombiner implements ImageCombiner {
 
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    ColorHolder sample = image.getColor(x, y);
+                    ColorWrapper sample = image.getColor(x, y);
                     int index = y * width + x;
 
                     // Additively combine pixels
@@ -45,7 +45,7 @@ public class AdditiveCombiner implements ImageCombiner {
         // Construct the new image
         ImageWrapper temp = new ImageWrapper(width, height);
         for (int i = 0; i < pixels; i++) {
-            temp.setColor(pixels / width, pixels % width, new ColorHolder(reds[i], greens[i], blues[i]));
+            temp.setColor(pixels / width, pixels % width, new ColorWrapper(reds[i], greens[i], blues[i]));
         }
 
         return temp;

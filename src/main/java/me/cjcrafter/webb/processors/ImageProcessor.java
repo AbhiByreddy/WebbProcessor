@@ -1,8 +1,8 @@
 package me.cjcrafter.webb.processors;
 
-import java.awt.image.BufferedImage;
+import me.cjcrafter.webb.ImageWrapper;
 
 public interface ImageProcessor {
 
-    BufferedImage process(BufferedImage image);
+    ImageWrapper process(ImageWrapper image);
 }

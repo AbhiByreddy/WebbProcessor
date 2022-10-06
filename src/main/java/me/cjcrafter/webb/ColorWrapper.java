@@ -4,44 +4,46 @@ import me.cjcrafter.webb.img.ImageUtil;
 
 import java.awt.*;
 
-public class ColorHolder implements Cloneable {
+public class ColorWrapper implements Cloneable {
 
     public float r;
     public float g;
     public float b;
 
-    public ColorHolder(int rgb) {
+    public ColorWrapper(int rgb) {
         this((rgb >> 16) & 255, (rgb >> 8) & 255, rgb & 255);
     }
 
-    public ColorHolder(Color color) {
+    public ColorWrapper(Color color) {
         r = color.getRed() / 255f;
         g = color.getGreen() / 255f;
         b = color.getBlue() / 255f;
     }
 
-    public ColorHolder(float r, float g, float b) {
+    public ColorWrapper(float r, float g, float b) {
         this.r = r;
         this.g = g;
         this.b = b;
     }
 
-    public ColorHolder(int r, int g, int b) {
+    public ColorWrapper(int r, int g, int b) {
         this.r = r / 255f;
         this.g = g / 255f;
         this.b = b / 255f;
     }
 
-    public void add(ColorHolder other) {
+    public ColorWrapper add(ColorWrapper other) {
         this.r += other.r;
         this.g += other.g;
         this.b += other.b;
+        return this;
     }
 
-    public void multiply(ColorHolder other) {
+    public ColorWrapper multiply(ColorWrapper other) {
         this.r *= other.r;
         this.g *= other.g;
         this.b *= other.b;
+        return this;
     }
 
     public int getR() {
@@ -61,9 +63,9 @@ public class ColorHolder implements Cloneable {
     }
 
     @Override
-    public ColorHolder clone() {
+    public ColorWrapper clone() {
         try {
-            return (ColorHolder) super.clone();
+            return (ColorWrapper) super.clone();
         } catch (CloneNotSupportedException ex) {
             throw new InternalError(ex);
         }
