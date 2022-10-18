@@ -3,7 +3,7 @@
 }
 
 .label {
-    -fx-font-size: 24;
+    -fx-font-size: 16;
     -fx-font-family: "Lucida Console";
     -fx-text-fill: #AFB1B3;
     -fx-alignment: center;
@@ -55,5 +55,5 @@
 }
 
 #titleLabel {
-    -fx-font-size: 48;
+    -fx-font-size: 24;
 }

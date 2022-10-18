@@ -1,25 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.cjcrafter.webb.ui.Controller">
    <children>
       <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Image 1">
+          <Tab text="Input">
             <content>
-              <AnchorPane fx:id="combineImages" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane fx:id="imagesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label layoutY="1.0" prefHeight="3.0" prefWidth="600.0" text="Combine Images" />
+                        <Label fx:id="titleLabel" layoutY="14.0" prefHeight="25.0" prefWidth="300.0" text="Combine Images" />
+                        <Button fx:id="openFileChooser" layoutX="75.0" layoutY="57.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Upload Images" />
+                        <ScrollPane layoutX="300.0" prefHeight="377.0" prefWidth="300.0">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="375.0" prefWidth="300.0">
+                                 <children>
+                                    <ListView fx:id="fileList" prefHeight="375.0" prefWidth="300.0" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </ScrollPane>
+                        <TextArea editable="false" layoutX="50.0" layoutY="162.0" prefHeight="200.0" prefWidth="200.0" text="Supported Types:&#10;.png&#10;.jpeg&#10;.tiff&#10;" />
+                        <Button layoutX="75.0" layoutY="110.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Queue Processing" />
                      </children></AnchorPane>
             </content>
           </Tab>
-          <Tab text="Image 2">
+          <Tab text="Settings">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="13.0" fitWidth="267.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@spectrum.png" />
+                           </image>
+                        </ImageView>
+                        <Slider fx:id="minSpectrumSlider" blockIncrement="1.0" layoutX="14.0" layoutY="40.0" max="700.0" min="400.0" showTickLabels="true" showTickMarks="true" value="450.0" />
+                        <Label layoutX="154.0" layoutY="40.0" text="Min:" />
+                        <ImageView fx:id="minSpectrumImage" fitHeight="16.0" fitWidth="16.0" layoutX="271.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@16icon.png" />
+                           </image>
+                        </ImageView>
+                        <Spinner fx:id="minSpectrumSpinner" editable="true" layoutX="193.0" layoutY="40.0" prefHeight="25.0" prefWidth="70.0" />
+                        <Slider fx:id="maxSpectrumSlider" blockIncrement="1.0" layoutX="14.0" layoutY="80.0" max="700.0" min="400.0" showTickLabels="true" showTickMarks="true" value="650.0" />
+                        <Label layoutX="154.0" layoutY="80.0" text="Max:" />
+                        <ImageView fx:id="maxSpectrumImage" fitHeight="16.0" fitWidth="16.0" layoutX="271.0" layoutY="80.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@16icon.png" />
+                           </image>
+                        </ImageView>
+                        <Spinner fx:id="maxSpectrumSpinner" editable="true" layoutX="193.0" layoutY="80.0" prefHeight="25.0" prefWidth="70.0" />
+                        <Slider fx:id="brightnessSlider" layoutX="14.0" layoutY="120.0" min="-100.0" showTickLabels="true" showTickMarks="true" />
+                        <Label layoutX="154.0" layoutY="120.0" text="Bright:" />
+                        <Spinner fx:id="brightnessSpinner" editable="true" layoutX="222.0" layoutY="120.0" prefHeight="25.0" prefWidth="70.0" />
+                        <Slider fx:id="contrastSlider" layoutX="14.0" layoutY="160.0" min="-100.0" showTickLabels="true" showTickMarks="true" />
+                        <Label layoutX="154.0" layoutY="160.0" text="Contr:" />
+                        <Spinner fx:id="contrastSpinner" editable="true" layoutX="212.0" layoutY="160.0" prefHeight="25.0" prefWidth="70.0" />
+                        <ImageView fx:id="contrastDemo" fitHeight="200.0" fitWidth="287.0" layoutX="300.0" layoutY="103.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@small_contrast_demo.png" />
+                           </image>
+                        </ImageView>
+                        <Slider fx:id="trimSlider" layoutX="14.0" layoutY="200.0" max="150.0" showTickLabels="true" showTickMarks="true" />
+                        <Label layoutX="154.0" layoutY="200.0" text="Trim:" />
+                        <Spinner fx:id="trimSpinner" editable="true" layoutX="203.0" layoutY="200.0" prefHeight="25.0" prefWidth="70.0" />
+                     </children></AnchorPane>
             </content>
           </Tab>
         </tabs>

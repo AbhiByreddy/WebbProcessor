@@ -6,6 +6,9 @@ import java.awt.*;
 
 public class ColorWrapper implements Cloneable {
 
+    public static final int SPECTRUM_MIN = 400;
+    public static final int SPECTRUM_MAX = 700;
+
     public float r;
     public float g;
     public float b;
@@ -46,6 +49,13 @@ public class ColorWrapper implements Cloneable {
         return this;
     }
 
+    public ColorWrapper truncate() {
+        r = ImageUtil.clamp01(r);
+        g = ImageUtil.clamp01(g);
+        b = ImageUtil.clamp01(b);
+        return this;
+    }
+
     public int getR() {
         return ImageUtil.clamp((int) (r * 255f), 0, 255);
     }
@@ -79,7 +89,7 @@ public class ColorWrapper implements Cloneable {
 
     public static ColorWrapper fromWavelength(float percentage) {
         // Range works from 400 to 700
-        int rgb = wavelengthToRGB(450 + percentage * (650 - 450));
+        int rgb = wavelengthToRGB(400 + percentage * (700 - 400));
         return new ColorWrapper(rgb);
     }
 
